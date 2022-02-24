@@ -57,10 +57,18 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
+  # use redis cache store to cache_store and session_store
+  config.cache_store = :redis_cache_store, {
+    url: ENV["REDIS_URL"],
+    namespace: 'cache',
+    expires_in: 3.hours
+  }
+
+  config.session_store :cache_store, key: '_app_session', expire_after: 1.day.to_i
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "undef_production"
+  # config.active_job.queue_name_prefix = "sandbox_production"
 
   config.action_mailer.perform_caching = false
 

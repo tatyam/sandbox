@@ -1,0 +1,45 @@
+<% content_for :pagescript do -%>
+  <%= javascript_tag do %>
+    var city_sel = document.getElementById('city_sel');
+    var go_btn = document.getElementById('go_btn');
+
+    var city_id;
+
+    city_sel.addEventListener("change", function() {
+      city_id = city_sel.options[city_sel.selectedIndex].value;
+      if (city_id == '') {
+        go_btn.disabled = true;
+      } else {
+        go_btn.disabled = false;
+      }
+    }, false);
+
+    go_btn.addEventListener("click", function() {
+      location.href = '<%= weathers_url %>/' + city_id;
+    }, false);
+  <% end %>
+<% end -%>
+
+    <div class='mt-4 text-center'>
+<% if flash[:alert] -%>
+      <div class="alert alert-danger" role="alert">
+        <%= alert %>
+      </div>
+<% end -%>
+      <h3>都市を選択</h3>
+      <p>
+        <div class='row gy-2 gx-3 justify-content-center'>
+          <div class='col-auto'>
+            <%= select_tag 'city_id',
+              options_from_collection_for_select(@cities, "id", "name"),
+              { include_blank: true, id: 'city_sel', class: 'form-select', onselect: 'switch-submit();' }
+            %>
+          </div>
+          <div class='col-auto'>
+            <%= button_tag '選択', id: 'go_btn', class: 'btn btn-primary', disabled: true %>
+          </div>
+        </div>
+      </p>
+
+      <p class="mt-5"><%= link_to '戻る', root_url, class: 'btn btn-link', role: 'button'  %></p>
+    </div>
